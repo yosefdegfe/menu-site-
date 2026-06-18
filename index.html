@@ -44,67 +44,17 @@
   <style>
     * { -webkit-tap-highlight-color: transparent; }
     body { font-family: 'DM Sans', sans-serif; background: #faf6f1; }
-
     .font-serif { font-family: 'Cormorant Garamond', serif; }
     .font-sans { font-family: 'DM Sans', sans-serif; }
-
-    /* Custom scrollbar */
     .hide-scroll::-webkit-scrollbar { display: none; }
     .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-
-    /* Smooth transitions */
     .card-hover { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .card-hover:hover, .card-hover:active { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(61,35,20,0.15); }
-
-    /* Image overlay gradient */
-    .img-overlay::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(61,35,20,0.6) 0%, transparent 50%);
-      pointer-events: none;
-    }
-
-    /* Stagger animation */
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .img-overlay::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(61,35,20,0.6) 0%, transparent 50%); pointer-events: none; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-    /* Shimmer loading */
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-    .shimmer {
-      background: linear-gradient(90deg, #f0e6d6 25%, #faf6f1 50%, #f0e6d6 75%);
-      background-size: 200% 100%;
-      animation: shimmer 2s infinite;
-    }
-
-    /* Bottom sheet */
-    .sheet-enter { transform: translateY(100%); }
-    .sheet-enter-active { transform: translateY(0); }
-
-    /* Glass effect */
-    .glass {
-      background: rgba(250, 246, 241, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-
-    /* RTL support */
+    .glass { background: rgba(250, 246, 241, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
     [dir="rtl"] .rtl-flip { transform: scaleX(-1); }
-
-    /* Custom checkbox */
-    .toggle-checkbox:checked {
-      right: 0;
-      border-color: #a66d3a;
-    }
-    .toggle-checkbox:checked + .toggle-label {
-      background-color: #a66d3a;
-    }
   </style>
 <base target="_blank">
 </head>
@@ -140,8 +90,8 @@
               <i class="fas fa-mug-hot text-cream text-lg"></i>
             </div>
             <div>
-              <h1 class="font-serif text-xl font-bold text-espresso leading-tight" data-en="Le Petit Café" data-ar="لو بيتي كافيه">Le Petit Café</h1>
-              <p class="text-[10px] text-cafe-400 tracking-[0.2em] uppercase font-medium" data-en="Artisan Coffee & Kitchen" data-ar="قهوة وحرفية ومطبخ">Artisan Coffee & Kitchen</p>
+              <h1 class="font-serif text-xl font-bold text-espresso leading-tight" data-en="Le Petit Café" data-am="ል ፔቲ ካፌ">Le Petit Café</h1>
+              <p class="text-[10px] text-cafe-400 tracking-[0.2em] uppercase font-medium" data-en="Artisan Coffee & Kitchen" data-am="የባህር ካፌ እና ወጥ">Artisan Coffee & Kitchen</p>
             </div>
           </div>
           <button onclick="openSettings()" class="w-10 h-10 rounded-full bg-white/80 border border-cafe-100 flex items-center justify-center text-cafe-600 hover:bg-white transition-all shadow-sm">
@@ -149,38 +99,33 @@
           </button>
         </div>
 
-        <!-- Category Pills -->
-        <div id="categoryTabs" class="flex gap-2 overflow-x-auto hide-scroll pb-1">
-          <!-- Injected by JS -->
-        </div>
+        <div id="categoryTabs" class="flex gap-2 overflow-x-auto hide-scroll pb-1"></div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main id="content" class="px-5 pt-5 pb-28">
-      <!-- Injected by JS -->
-    </main>
+    <main id="content" class="px-5 pt-5 pb-28"></main>
 
     <!-- Bottom Navigation -->
     <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-50 glass border-t border-cafe-100/50 px-6 py-2">
       <div class="flex justify-around items-center">
         <button onclick="switchTab('menu')" class="nav-item flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all" data-tab="menu">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-cafe-600 text-cream shadow-lg shadow-cafe-600/30">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-cafe-700 text-cream shadow-lg shadow-cafe-700/30">
             <i class="fas fa-utensils text-sm"></i>
           </div>
-          <span class="text-[10px] font-semibold text-cafe-700" data-en="Menu" data-ar="القائمة">Menu</span>
+          <span class="text-[10px] font-semibold text-cafe-700" data-en="Menu" data-am="ምናሌ">Menu</span>
         </button>
         <button onclick="switchTab('favorites')" class="nav-item flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all" data-tab="favorites">
           <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-cafe-100 text-cafe-400">
             <i class="fas fa-heart text-sm"></i>
           </div>
-          <span class="text-[10px] font-medium text-cafe-400" data-en="Saved" data-ar="المحفوظة">Saved</span>
+          <span class="text-[10px] font-medium text-cafe-400" data-en="Saved" data-am="የተቀመጡ">Saved</span>
         </button>
         <button onclick="switchTab('owner')" class="nav-item flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all" data-tab="owner">
           <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all bg-cafe-100 text-cafe-400">
             <i class="fas fa-lock text-sm"></i>
           </div>
-          <span class="text-[10px] font-medium text-cafe-400" data-en="Owner" data-ar="المالك">Owner</span>
+          <span class="text-[10px] font-medium text-cafe-400" data-en="Owner" data-am="ባለቤት">Owner</span>
         </button>
       </div>
     </nav>
@@ -193,14 +138,13 @@
       <div class="p-6">
         <div class="w-12 h-1 bg-cafe-200 rounded-full mx-auto mb-6"></div>
         <div class="flex items-center justify-between mb-6">
-          <h2 class="font-serif text-2xl font-bold text-espresso" data-en="Settings" data-ar="الإعدادات">Settings</h2>
+          <h2 class="font-serif text-2xl font-bold text-espresso" data-en="Settings" data-am="ቅንብሮች">Settings</h2>
           <button onclick="closeModal('settingsModal')" class="w-9 h-9 rounded-full bg-cafe-100 flex items-center justify-center text-cafe-600 hover:bg-cafe-200 transition-all">
             <i class="fas fa-times text-sm"></i>
           </button>
         </div>
 
         <div class="space-y-4">
-          <!-- Language -->
           <div class="bg-white rounded-2xl p-4 border border-cafe-100 shadow-sm">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
@@ -208,25 +152,22 @@
                   <i class="fas fa-globe"></i>
                 </div>
                 <div>
-                  <h3 class="font-semibold text-sm text-espresso" data-en="Language" data-ar="اللغة">Language</h3>
-                  <p class="text-xs text-cafe-400 mt-0.5" data-en="Switch between English & Arabic" data-ar="التبديل بين الإنجليزية والعربية">Switch between English & Arabic</p>
+                  <h3 class="font-semibold text-sm text-espresso" data-en="Language" data-am="ቋንቋ">Language</h3>
+                  <p class="text-xs text-cafe-400 mt-0.5" data-en="Choose your preferred language" data-am="የሚፈልጉትን ቋንቋ ይምረጡ">Choose your preferred language</p>
                 </div>
               </div>
-              <button onclick="toggleLanguage()" class="relative w-14 h-8 rounded-full transition-all duration-300 bg-cafe-200" id="langToggle">
-                <div class="absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-md transition-all duration-300 flex items-center justify-center text-xs font-bold text-cafe-700" id="langKnob">EN</div>
-              </button>
+              <button onclick="toggleLanguage()" class="h-9 px-4 rounded-full bg-cafe-100 text-cafe-700 font-semibold text-xs hover:bg-cafe-200 transition-all" id="langBtn">EN</button>
             </div>
           </div>
 
-          <!-- Theme Info -->
           <div class="bg-white rounded-2xl p-4 border border-cafe-100 shadow-sm opacity-60">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-cafe-50 flex items-center justify-center text-cafe-600">
                 <i class="fas fa-palette"></i>
               </div>
               <div>
-                <h3 class="font-semibold text-sm text-espresso" data-en="Warm Theme" data-ar="سمة دافئة">Warm Theme</h3>
-                <p class="text-xs text-cafe-400 mt-0.5" data-en="Curated for cozy dining" data-ar="مخصصة لتناول الطعام المريح">Curated for cozy dining</p>
+                <h3 class="font-semibold text-sm text-espresso" data-en="Warm Theme" data-am="ሞቃት ጭብጥ">Warm Theme</h3>
+                <p class="text-xs text-cafe-400 mt-0.5" data-en="Curated for cozy dining" data-am="ለመረጋጋት የተዘጋጀ">Curated for cozy dining</p>
               </div>
             </div>
           </div>
@@ -245,8 +186,8 @@
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cafe-600 to-cafe-800 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-cafe-600/30">
             <i class="fas fa-shield-alt text-2xl text-cream"></i>
           </div>
-          <h2 class="font-serif text-2xl font-bold text-espresso mb-1" data-en="Owner Access" data-ar="دخول المالك">Owner Access</h2>
-          <p class="text-sm text-cafe-400" data-en="Enter password to manage menu" data-ar="أدخل كلمة المرور لإدارة القائمة">Enter password to manage menu</p>
+          <h2 class="font-serif text-2xl font-bold text-espresso mb-1" data-en="Owner Access" data-am="የባለቤት መግቢያ">Owner Access</h2>
+          <p class="text-sm text-cafe-400" data-en="Enter password to manage menu" data-am="ምናሌን ለማስተዳደር የይለፍ ቃል ያስገቡ">Enter password to manage menu</p>
         </div>
 
         <form onsubmit="authenticate(event)" class="space-y-4">
@@ -254,10 +195,10 @@
             <input type="password" id="ownerPassword" required placeholder="••••" 
               class="w-full h-14 px-5 rounded-2xl bg-white border-2 border-cafe-100 text-center text-2xl tracking-[0.5em] font-bold text-espresso placeholder:text-cafe-200 focus:border-cafe-400 focus:outline-none transition-all">
           </div>
-          <p class="text-xs text-cafe-400 text-center" data-en="Default password: 1234" data-ar="كلمة المرور الافتراضية: ١٢٣٤">Default password: 1234</p>
+          <p class="text-xs text-cafe-400 text-center" data-en="Default password: 1234" data-am="ነባሪ የይለፍ ቃል፡ 1234">Default password: 1234</p>
           <button type="submit" class="w-full h-14 rounded-2xl bg-gradient-to-r from-cafe-600 to-cafe-700 text-cream font-semibold text-lg shadow-lg shadow-cafe-600/30 hover:shadow-xl hover:shadow-cafe-600/40 transition-all active:scale-[0.98]">
             <i class="fas fa-unlock mr-2"></i>
-            <span data-en="Unlock" data-ar="فتح">Unlock</span>
+            <span data-en="Unlock" data-am="ክፈት">Unlock</span>
           </button>
         </form>
       </div>
@@ -271,7 +212,7 @@
       <div class="p-6 overflow-y-auto">
         <div class="w-12 h-1 bg-cafe-200 rounded-full mx-auto mb-6"></div>
         <div class="flex items-center justify-between mb-6">
-          <h2 class="font-serif text-2xl font-bold text-espresso" id="modalTitle" data-en="Add Item" data-ar="إضافة عنصر">Add Item</h2>
+          <h2 class="font-serif text-2xl font-bold text-espresso" id="modalTitle" data-en="Add Item" data-am="አዲስ ዕቃ አስገባ">Add Item</h2>
           <button onclick="closeModal('itemModal')" class="w-9 h-9 rounded-full bg-cafe-100 flex items-center justify-center text-cafe-600 hover:bg-cafe-200 transition-all">
             <i class="fas fa-times text-sm"></i>
           </button>
@@ -282,63 +223,63 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Name (EN)" data-ar="الاسم (EN)">Name (EN)</label>
+              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Name (EN)" data-am="ስም (EN)">Name (EN)</label>
               <input type="text" id="itemNameEn" required class="w-full h-12 px-4 rounded-xl bg-white border border-cafe-100 text-sm text-espresso placeholder:text-cafe-300 focus:border-cafe-400 focus:outline-none transition-all">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Name (AR)" data-ar="الاسم (AR)">Name (AR)</label>
-              <input type="text" id="itemNameAr" required class="w-full h-12 px-4 rounded-xl bg-white border border-cafe-100 text-sm text-espresso placeholder:text-cafe-300 focus:border-cafe-400 focus:outline-none transition-all">
+              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Name (AM)" data-am="ስም (AM)">Name (AM)</label>
+              <input type="text" id="itemNameAm" required class="w-full h-12 px-4 rounded-xl bg-white border border-cafe-100 text-sm text-espresso placeholder:text-cafe-300 focus:border-cafe-400 focus:outline-none transition-all">
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Price" data-ar="السعر">Price</label>
+              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Price" data-am="ዋጋ">Price</label>
               <div class="relative">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-cafe-400 font-bold">$</span>
                 <input type="number" id="itemPrice" step="0.01" required class="w-full h-12 pl-8 pr-4 rounded-xl bg-white border border-cafe-100 text-sm text-espresso placeholder:text-cafe-300 focus:border-cafe-400 focus:outline-none transition-all">
               </div>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Category" data-ar="الفئة">Category</label>
+              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Category" data-am="ምድብ">Category</label>
               <select id="itemCategory" required class="w-full h-12 px-4 rounded-xl bg-white border border-cafe-100 text-sm text-espresso focus:border-cafe-400 focus:outline-none transition-all appearance-none">
-                <option value="starters" data-en="Starters" data-ar="مقبلات">Starters</option>
-                <option value="mains" data-en="Main Course" data-ar="أطباق رئيسية">Main Course</option>
-                <option value="desserts" data-en="Desserts" data-ar="حلويات">Desserts</option>
-                <option value="drinks" data-en="Drinks" data-ar="مشروبات">Drinks</option>
+                <option value="starters" data-en="Starters" data-am="መነሻዎች">Starters</option>
+                <option value="mains" data-en="Main Course" data-am="ዋና ምግቦች">Main Course</option>
+                <option value="desserts" data-en="Desserts" data-am="ጣፋጮች">Desserts</option>
+                <option value="drinks" data-en="Drinks" data-am="መጠጦች">Drinks</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Description (EN)" data-ar="الوصف (EN)">Description (EN)</label>
+            <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Description (EN)" data-am="መግለጫ (EN)">Description (EN)</label>
             <textarea id="itemDescEn" required rows="2" class="w-full px-4 py-3 rounded-xl bg-white border border-cafe-100 text-sm text-espresso placeholder:text-cafe-300 focus:border-cafe-400 focus:outline-none transition-all resize-none"></textarea>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Description (AR)" data-ar="الوصف (AR)">Description (AR)</label>
-            <textarea id="itemDescAr" required rows="2" class="w-full px-4 py-3 rounded-xl bg-white border border-cafe-100 text-sm text-espresso placeholder:text-cafe-300 focus:border-cafe-400 focus:outline-none transition-all resize-none"></textarea>
+            <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Description (AM)" data-am="መግለጫ (AM)">Description (AM)</label>
+            <textarea id="itemDescAm" required rows="2" class="w-full px-4 py-3 rounded-xl bg-white border border-cafe-100 text-sm text-espresso placeholder:text-cafe-300 focus:border-cafe-400 focus:outline-none transition-all resize-none"></textarea>
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Badge" data-ar="الشارة">Badge</label>
+              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Badge" data-am="ምልክት">Badge</label>
               <select id="itemBadge" class="w-full h-12 px-4 rounded-xl bg-white border border-cafe-100 text-sm text-espresso focus:border-cafe-400 focus:outline-none transition-all appearance-none">
-                <option value="" data-en="None" data-ar="لا شيء">None</option>
-                <option value="new" data-en="New" data-ar="جديد">New ⭐</option>
-                <option value="hot" data-en="Hot" data-ar="حار">Hot 🔥</option>
-                <option value="veg" data-en="Veg" data-ar="نباتي">Veg 🌿</option>
+                <option value="" data-en="None" data-am="ምንም">None</option>
+                <option value="new" data-en="New" data-am="አዲስ">New ⭐</option>
+                <option value="hot" data-en="Hot" data-am="በጣም የተወደደ">Hot 🔥</option>
+                <option value="veg" data-en="Veg" data-am="የጤና ምግብ">Veg 🌿</option>
               </select>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Icon" data-ar="الأيقونة">Icon</label>
+              <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase tracking-wider" data-en="Icon" data-am="አዶ">Icon</label>
               <input type="text" id="itemEmoji" maxlength="2" value="🍽️" class="w-full h-12 px-4 rounded-xl bg-white border border-cafe-100 text-sm text-center text-2xl focus:border-cafe-400 focus:outline-none transition-all">
             </div>
           </div>
 
           <button type="submit" class="w-full h-14 rounded-2xl bg-gradient-to-r from-cafe-600 to-cafe-700 text-cream font-semibold shadow-lg shadow-cafe-600/30 hover:shadow-xl transition-all active:scale-[0.98] mt-2">
             <i class="fas fa-check mr-2"></i>
-            <span data-en="Save Item" data-ar="حفظ العنصر">Save Item</span>
+            <span data-en="Save Item" data-am="ዕቃውን አስቀምጥ">Save Item</span>
           </button>
         </form>
       </div>
@@ -354,76 +295,75 @@
     let editingId = null;
 
     const categories = [
-      { id: 'all', en: 'All', ar: 'الكل', icon: 'fa-th-large' },
-      { id: 'starters', en: 'Starters', ar: 'مقبلات', icon: 'fa-leaf' },
-      { id: 'mains', en: 'Mains', ar: 'رئيسية', icon: 'fa-drumstick-bite' },
-      { id: 'desserts', en: 'Desserts', ar: 'حلويات', icon: 'fa-ice-cream' },
-      { id: 'drinks', en: 'Drinks', ar: 'مشروبات', icon: 'fa-mug-hot' }
+      { id: 'all', en: 'All', am: 'ሁሉም', icon: 'fa-th-large' },
+      { id: 'starters', en: 'Starters', am: 'መነሻዎች', icon: 'fa-leaf' },
+      { id: 'mains', en: 'Mains', am: 'ዋና ምግቦች', icon: 'fa-drumstick-bite' },
+      { id: 'desserts', en: 'Desserts', am: 'ጣፋጮች', icon: 'fa-ice-cream' },
+      { id: 'drinks', en: 'Drinks', am: 'መጠጦች', icon: 'fa-mug-hot' }
     ];
 
-    // Demo data with beautiful structure
     let menuItems = JSON.parse(localStorage.getItem('cafeMenuItems')) || [
       {
-        id: '1', nameEn: 'Truffle Mushroom Cappuccino', nameAr: 'كابوتشينو الفطر بالكمأ',
+        id: '1', nameEn: 'Truffle Mushroom Cappuccino', nameAm: 'ትሩፍል ማሽሩም ካፑቺኖ',
         price: 14, category: 'starters',
         descEn: 'Wild mushroom velouté with black truffle foam, toasted sourdough croutons, and micro herbs. A warm embrace in a bowl.',
-        descAr: 'فيلوتيه الفطر البري مع رغوة الكمأة السوداء، كروتونات الساوردو المحمصة، وأعشاب مايكرو. حضن دافئ في وعاء.',
+        descAm: 'የባህር ማሽሩም ቬሉቴ ከጥቁር ትሩፍል ፎም፣ የተጠበሰ ሳውርዶው ክሩቶን እና ማይክሮ ሄርብስ ጋር። በብረታብረት ውስጥ የሞቀ ቅብብል።',
         badge: 'hot', emoji: '🍄', favorite: false
       },
       {
-        id: '2', nameEn: 'Burrata & Heirloom Tomato', nameAr: 'بوراتا وطماطم تراثية',
+        id: '2', nameEn: 'Burrata & Heirloom Tomato', nameAm: 'ቡራታ እና ትሮሊሞ ቶማቶ',
         price: 18, category: 'starters',
         descEn: 'Creamy Puglian burrata, vine-ripened heirloom tomatoes, aged balsamic, extra virgin olive oil, and fresh basil.',
-        descAr: 'بوراتا بوجليان كريمية، طماطم تراثية ناضجة على الكرمة، بلسميك معتق، زيت زيتون بكر، وريحان طازج.',
+        descAm: 'ክሬሚ ፑግሊያን ቡራታ፣ በወይን ላይ የበሰለ ትሮሊሞ ቶማቶ፣ የዕድሜ የገሰሰ ባልሳሚክ፣ ኤክስትራ ቨርጂን ዘይት እና ጣፋጭ ባዚል።',
         badge: 'veg', emoji: '🍅', favorite: false
       },
       {
-        id: '3', nameEn: 'Wagyu Beef Burger', nameAr: 'برجر لحم واجيو',
+        id: '3', nameEn: 'Wagyu Beef Burger', nameAm: 'ዋጉ የበሬ ሥጋ ብርገር',
         price: 32, category: 'mains',
         descEn: 'A5 Wagyu patty, brioche bun, aged cheddar, caramelized onion jam, truffle mayo, and hand-cut parmesan fries.',
-        descAr: 'قطعة لحم واجيو A5، خبز بريوش، شيدر معتق، مربى البصل المكرمل، مايونيز الكمأ، وبطاطس بارميزان مقطعة يدوياً.',
+        descAm: 'A5 ዋጉ ፓቲ፣ ብሪኦሽ ዳቦ፣ የዕድሜ የገሰሰ ቼዳር፣ የታከመ የሽንኩርት ጃም፣ ትሩፍል ማዮ እና በእጅ የተቆረጠ ፓርሜዛን ፍራይ።',
         badge: 'hot', emoji: '🍔', favorite: false
       },
       {
-        id: '4', nameEn: 'Pan-Seared Salmon', nameAr: 'سلمون مشوي بالمقلاة',
+        id: '4', nameEn: 'Pan-Seared Salmon', nameAm: 'በሳጥን የተጠበሰ ሳልሞን',
         price: 36, category: 'mains',
         descEn: 'Atlantic salmon, lemon beurre blanc, roasted asparagus, saffron risotto, and crispy shallots.',
-        descAr: 'سلمون أطلسي، صلصة الزبدة بالليمون، هليون محمص، ريزوتو الزعفران، وبصل مقلي مقرمش.',
+        descAm: 'አትላንቲክ ሳልሞን፣ ሎሚ ቦር ብላንክ፣ የተጠበሰ አስፓራጉስ፣ ዘይፍ ሪዞቶ እና ቀጭን የተጠበሰ ሽንኩርት።',
         badge: 'new', emoji: '🐟', favorite: false
       },
       {
-        id: '5', nameEn: 'Wild Mushroom Risotto', nameAr: 'ريزوتو الفطر البري',
+        id: '5', nameEn: 'Wild Mushroom Risotto', nameAm: 'የባህር ማሽሩም ሪዞቶ',
         price: 28, category: 'mains',
         descEn: 'Arborio rice, porcini & chanterelle mushrooms, parmesan reggiano, white wine, and truffle oil.',
-        descAr: 'أرز أربوريو، فطر بورشيني وشانتريل، بارميزان ريجيانو، نبيذ أبيض، وزيت الكمأ.',
+        descAm: 'አርቦሪዮ ሩዝ፣ ፖርቺኒ እና ቻንቴሬል ማሽሩም፣ ፓርሜዛን ሬጃኖ፣ ነጭ ወይን እና ትሩፍል ዘይት።',
         badge: 'veg', emoji: '🍚', favorite: false
       },
       {
-        id: '6', nameEn: 'Tiramisu Classico', nameAr: 'تيراميسو كلاسيكو',
+        id: '6', nameEn: 'Tiramisu Classico', nameAm: 'ክላሲኮ ቴራሚሱ',
         price: 16, category: 'desserts',
         descEn: 'Traditional Italian layers of espresso-soaked ladyfingers, mascarpone cream, and cocoa dust. Made fresh daily.',
-        descAr: 'طبقات إيطالية تقليدية من أصابع السيدة المنقوعة بالإسبريسو، كريم الماسكاربوني، ورشة الكاكاو. محضر طازج يومياً.',
+        descAm: 'ባህላዊ ኢጣሊያኛ ከኢስፕሬሶ የተረጨ ሌዲፊንገር፣ ማስካርፖኔ ክሬም እና ኮኮዋ ዱቄት የተደረደረ። በየቀኑ በጣም አዲስ የሚሰራ።',
         badge: '', emoji: '🍰', favorite: false
       },
       {
-        id: '7', nameEn: 'Salted Caramel Lava Cake', nameAr: 'كيك لافا بالكراميل المملح',
+        id: '7', nameEn: 'Salted Caramel Lava Cake', nameAm: 'የጨው ካራሜል ላቫ ኬክ',
         price: 18, category: 'desserts',
         descEn: 'Warm 70% dark chocolate cake with a molten center, salted caramel drizzle, and vanilla bean ice cream.',
-        descAr: 'كيك شوكولاتة داكنة 70% دافئ مع مركز ذائب، تغطية كراميل مملح، وآيس كريم فانيليا الحبوب.',
+        descAm: 'የሞቀ 70% ጥቁር ቾኮሌት ኬክ ከቀለደ መሃል ጋር፣ የጨው ካራሜል ጠብታ እና ቫኒላ ቢን አይስ ክሬም።',
         badge: 'hot', emoji: '🍫', favorite: false
       },
       {
-        id: '8', nameEn: 'Spanish Iced Latte', nameAr: 'لاتيه إسباني مثلج',
+        id: '8', nameEn: 'Spanish Iced Latte', nameAm: 'የስፓኝ አይስ ላቴ',
         price: 9, category: 'drinks',
         descEn: 'Double ristretto, sweetened condensed milk, over ice with cinnamon dust and orange blossom water.',
-        descAr: 'ريستريتو مزدوج، حليب مكثف محلى، على الثلج مع رشة قرفة وماء زهر البرتقال.',
+        descAm: 'ድብል ሪስትሬቶ፣ የተጣፋጠ የተቀነባበረ ወተት፣ በበረዶ ላይ ከቀረፋ ዱቄት እና ከኦሬንጅ አበባ ውሃ ጋር።',
         badge: 'new', emoji: '☕', favorite: false
       },
       {
-        id: '9', nameEn: 'Passion Fruit Mojito', nameAr: 'موهيتو فاكهة العاطفة',
+        id: '9', nameEn: 'Passion Fruit Mojito', nameAm: 'ፓሽን ፍሩት ሞሂቶ',
         price: 13, category: 'drinks',
         descEn: 'Fresh mint, lime, passion fruit purée, soda water, and a hint of vanilla. Non-alcoholic and refreshing.',
-        descAr: 'نعناع طازج، ليمون، هريس فاكهة العاطفة، مياه غازية، ولمحة فانيليا. بدون كحول ومنعش.',
+        descAm: 'ጣፋጭ ናና፣ ሎሚ፣ ፓሽን ፍሩት ፑሬ፣ ሶዳ ውሃ እና ትንሽ ቫኒላ። ያለ አልኮሆል እና አዲስ የሚያደርግ።',
         badge: 'veg', emoji: '🍹', favorite: false
       }
     ];
@@ -435,11 +375,9 @@
         setTimeout(() => document.getElementById('splash').remove(), 700);
       }, 2500);
 
-      if (currentLang === 'ar') {
+      if (currentLang === 'am') {
         document.dir = 'rtl';
-        document.getElementById('langToggle').classList.replace('bg-cafe-200', 'bg-cafe-600');
-        document.getElementById('langKnob').style.transform = 'translateX(24px)';
-        document.getElementById('langKnob').textContent = 'AR';
+        document.getElementById('langBtn').textContent = 'AM';
       }
 
       renderCategories();
@@ -458,7 +396,7 @@
               : 'bg-white text-cafe-600 border border-cafe-100 hover:bg-cafe-50 hover:border-cafe-200'
           }">
           <i class="fas ${cat.icon} text-xs"></i>
-          ${currentLang === 'ar' ? cat.ar : cat.en}
+          ${currentLang === 'am' ? cat.am : cat.en}
         </button>
       `).join('');
     }
@@ -476,7 +414,9 @@
         : menuItems.filter(item => item.category === currentCategory);
 
       if (filtered.length === 0) {
-        container.innerHTML = emptyState('fa-utensils', 'No items yet', 'Add items from the owner panel');
+        container.innerHTML = emptyState('fa-utensils', 
+          currentLang === 'am' ? 'እስካሁን ዕቃዎች የሉም' : 'No items yet', 
+          currentLang === 'am' ? 'እቃዎችን ከባለቤት ፓነል ያስገቡ' : 'Add items from the owner panel');
         return;
       }
 
@@ -486,9 +426,9 @@
         <div class="mb-5">
           <h2 class="font-serif text-2xl font-bold text-espresso flex items-center gap-2">
             <i class="fas ${catInfo?.icon || 'fa-utensils'} text-cafe-500 text-lg"></i>
-            ${currentLang === 'ar' ? catInfo?.ar : catInfo?.en}
+            ${currentLang === 'am' ? catInfo?.am : catInfo?.en}
           </h2>
-          <p class="text-sm text-cafe-400 mt-1">${filtered.length} ${currentLang === 'ar' ? 'عنصر' : 'delicious items'}</p>
+          <p class="text-sm text-cafe-400 mt-1">${filtered.length} ${currentLang === 'am' ? 'ዕቃዎች' : 'delicious items'}</p>
         </div>
         <div class="space-y-5">
           ${filtered.map((item, i) => menuCard(item, i)).join('')}
@@ -500,7 +440,9 @@
       const favorites = menuItems.filter(item => item.favorite);
 
       if (favorites.length === 0) {
-        container.innerHTML = emptyState('fa-heart', 'No favorites yet', 'Tap the heart on any dish to save it here');
+        container.innerHTML = emptyState('fa-heart', 
+          currentLang === 'am' ? 'እስካሁን የተወደዱ የሉም' : 'No favorites yet', 
+          currentLang === 'am' ? 'በማንኛውም ምግብ ላይ ልቡን ይንኩ እዚህ ለማስቀመጥ' : 'Tap the heart on any dish to save it here');
         return;
       }
 
@@ -508,9 +450,9 @@
         <div class="mb-5">
           <h2 class="font-serif text-2xl font-bold text-espresso flex items-center gap-2">
             <i class="fas fa-heart text-red-400 text-lg"></i>
-            ${currentLang === 'ar' ? 'المفضلة' : 'Your Favorites'}
+            ${currentLang === 'am' ? 'የተወደዱ' : 'Your Favorites'}
           </h2>
-          <p class="text-sm text-cafe-400 mt-1">${favorites.length} ${currentLang === 'ar' ? 'عنصر محفوظ' : 'saved items'}</p>
+          <p class="text-sm text-cafe-400 mt-1">${favorites.length} ${currentLang === 'am' ? 'የተቀመጡ ዕቃዎች' : 'saved items'}</p>
         </div>
         <div class="space-y-5">
           ${favorites.map((item, i) => menuCard(item, i)).join('')}
@@ -525,11 +467,11 @@
             <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-cafe-100 to-cafe-200 flex items-center justify-center mb-5 shadow-inner">
               <i class="fas fa-lock text-3xl text-cafe-400"></i>
             </div>
-            <h2 class="font-serif text-2xl font-bold text-espresso mb-2" data-en="Owner Panel" data-ar="لوحة المالك">Owner Panel</h2>
-            <p class="text-sm text-cafe-400 mb-6 max-w-[240px]" data-en="Enter password to add, edit, or remove menu items" data-ar="أدخل كلمة المرور لإضافة أو تعديل أو حذف عناصر القائمة">Enter password to add, edit, or remove menu items</p>
+            <h2 class="font-serif text-2xl font-bold text-espresso mb-2" data-en="Owner Panel" data-am="የባለቤት ፓነል">Owner Panel</h2>
+            <p class="text-sm text-cafe-400 mb-6 max-w-[240px]" data-en="Enter password to add, edit, or remove menu items" data-am="ምናሌን ለማስተዳደር የይለፍ ቃል ያስገቡ">Enter password to add, edit, or remove menu items</p>
             <button onclick="openModal('authModal')" class="h-12 px-8 rounded-2xl bg-gradient-to-r from-cafe-600 to-cafe-700 text-cream font-semibold shadow-lg shadow-cafe-600/30 hover:shadow-xl transition-all active:scale-[0.98]">
               <i class="fas fa-unlock mr-2"></i>
-              <span data-en="Unlock" data-ar="فتح">Unlock</span>
+              <span data-en="Unlock" data-am="ክፈት">Unlock</span>
             </button>
           </div>
         `;
@@ -543,7 +485,7 @@
         <div class="flex items-center justify-between mb-6">
           <h2 class="font-serif text-2xl font-bold text-espresso">
             <i class="fas fa-shield-alt text-cafe-500 mr-2"></i>
-            ${currentLang === 'ar' ? 'لوحة المالك' : 'Owner Panel'}
+            ${currentLang === 'am' ? 'የባለቤት ፓነል' : 'Owner Panel'}
           </h2>
           <button onclick="openAddModal()" class="w-11 h-11 rounded-xl bg-gradient-to-br from-cafe-600 to-cafe-700 text-cream flex items-center justify-center shadow-lg shadow-cafe-600/30 hover:shadow-xl transition-all active:scale-95">
             <i class="fas fa-plus"></i>
@@ -556,10 +498,10 @@
             <div class="mb-6">
               <h3 class="text-xs font-bold text-cafe-500 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
                 <i class="fas ${cat.icon}"></i>
-                ${currentLang === 'ar' ? cat.ar : cat.en}
+                ${currentLang === 'am' ? cat.am : cat.en}
                 <span class="text-cafe-300 font-normal">(${items.length})</span>
               </h3>
-              ${items.length === 0 ? `<p class="text-sm text-cafe-300 py-2">${currentLang === 'ar' ? 'لا توجد عناصر' : 'No items'}</p>` : ''}
+              ${items.length === 0 ? `<p class="text-sm text-cafe-300 py-2">${currentLang === 'am' ? 'እስካሁን ዕቃዎች የሉም' : 'No items'}</p>` : ''}
               <div class="space-y-3">
                 ${items.map(item => `
                   <div class="bg-white rounded-2xl p-3 border border-cafe-100 shadow-sm flex items-center gap-3">
@@ -567,8 +509,8 @@
                       ${item.emoji}
                     </div>
                     <div class="flex-1 min-w-0">
-                      <h4 class="font-semibold text-sm text-espresso truncate">${currentLang === 'ar' ? item.nameAr : item.nameEn}</h4>
-                      <p class="text-xs text-cafe-400 mt-0.5">$${item.price.toFixed(2)} · ${item.badge ? item.badge.toUpperCase() : (currentLang === 'ar' ? 'بدون' : 'Standard')}</p>
+                      <h4 class="font-semibold text-sm text-espresso truncate">${currentLang === 'am' ? item.nameAm : item.nameEn}</h4>
+                      <p class="text-xs text-cafe-400 mt-0.5">$${item.price.toFixed(2)} · ${item.badge ? item.badge.toUpperCase() : (currentLang === 'am' ? 'መደበኛ' : 'Standard')}</p>
                     </div>
                     <div class="flex gap-1.5">
                       <button onclick="openEditModal('${item.id}')" class="w-9 h-9 rounded-lg bg-cafe-50 text-cafe-600 flex items-center justify-center hover:bg-cafe-100 transition-all">
@@ -587,12 +529,11 @@
 
         <button onclick="isOwner=false; renderContent();" class="w-full h-12 rounded-2xl bg-cafe-100 text-cafe-700 font-semibold hover:bg-cafe-200 transition-all active:scale-[0.98] mt-4">
           <i class="fas fa-lock mr-2"></i>
-          <span data-en="Lock Panel" data-ar="قفل اللوحة">Lock Panel</span>
+          <span data-en="Lock Panel" data-am="ፓነሉን ዝጋ">Lock Panel</span>
         </button>
       `;
     }
 
-    // ==================== CARD COMPONENT ====================
     function menuCard(item, index) {
       const badgeColors = {
         new: 'bg-amber-100 text-amber-700 border-amber-200',
@@ -602,44 +543,34 @@
       };
 
       const badgeLabels = {
-        new: currentLang === 'ar' ? 'جديد' : 'NEW',
-        hot: currentLang === 'ar' ? 'الأكثر مبيعاً' : 'BESTSELLER',
-        veg: currentLang === 'ar' ? 'نباتي' : 'VEGETARIAN',
+        new: currentLang === 'am' ? 'አዲስ' : 'NEW',
+        hot: currentLang === 'am' ? 'በጣም የተወደደ' : 'BESTSELLER',
+        veg: currentLang === 'am' ? 'የጤና ምግብ' : 'VEGETARIAN',
         '': ''
       };
 
       return `
         <div class="card-hover bg-white rounded-3xl overflow-hidden border border-cafe-100 shadow-sm" style="animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) ${index * 0.08}s both;">
-          <!-- Image Area -->
           <div class="relative h-52 bg-gradient-to-br from-cafe-100 via-cafe-50 to-parchment overflow-hidden img-overlay">
-            <!-- Decorative pattern -->
             <div class="absolute inset-0 opacity-30" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23a66d3a\' fill-opacity=\'0.08\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
-
-            <!-- Centered Icon -->
             <div class="absolute inset-0 flex items-center justify-center">
               <div class="w-24 h-24 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-lg">
                 <span class="text-5xl">${item.emoji}</span>
               </div>
             </div>
-
-            <!-- Badge -->
             ${item.badge ? `
               <div class="absolute top-4 left-4 px-3 py-1.5 rounded-full text-[10px] font-bold tracking-wider border ${badgeColors[item.badge]}">
                 ${badgeLabels[item.badge]}
               </div>
             ` : ''}
-
-            <!-- Favorite Button -->
             <button onclick="toggleFavorite('${item.id}')" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md hover:scale-110 transition-all">
               <i class="fas fa-heart ${item.favorite ? 'text-red-400' : 'text-cafe-200'} text-lg transition-colors"></i>
             </button>
-
-            <!-- Bottom Info Overlay -->
             <div class="absolute bottom-0 left-0 right-0 p-4 text-white z-10">
               <div class="flex items-end justify-between">
                 <div>
                   <p class="text-[10px] uppercase tracking-[0.2em] opacity-80 mb-1">${categories.find(c => c.id === item.category)?.[currentLang] || ''}</p>
-                  <h3 class="font-serif text-xl font-bold leading-tight">${currentLang === 'ar' ? item.nameAr : item.nameEn}</h3>
+                  <h3 class="font-serif text-xl font-bold leading-tight">${currentLang === 'am' ? item.nameAm : item.nameEn}</h3>
                 </div>
                 <div class="text-right">
                   <span class="font-serif text-2xl font-bold">$${item.price.toFixed(0)}</span>
@@ -648,18 +579,16 @@
               </div>
             </div>
           </div>
-
-          <!-- Content -->
           <div class="p-5">
-            <p class="text-sm text-cafe-500 leading-relaxed mb-4">${currentLang === 'ar' ? item.descAr : item.descEn}</p>
+            <p class="text-sm text-cafe-500 leading-relaxed mb-4">${currentLang === 'am' ? item.descAm : item.descEn}</p>
             <div class="flex items-center gap-4 text-xs text-cafe-400">
               <span class="flex items-center gap-1.5">
                 <i class="fas fa-clock text-cafe-300"></i>
-                ${Math.floor(Math.random() * 8 + 12)}-${Math.floor(Math.random() * 10 + 20)} ${currentLang === 'ar' ? 'دقيقة' : 'min'}
+                ${Math.floor(Math.random() * 8 + 12)}-${Math.floor(Math.random() * 10 + 20)} ${currentLang === 'am' ? 'ደቂቃ' : 'min'}
               </span>
               <span class="flex items-center gap-1.5">
                 <i class="fas fa-fire text-cafe-300"></i>
-                ${Math.floor(Math.random() * 150 + 250)} ${currentLang === 'ar' ? 'سعرة' : 'kcal'}
+                ${Math.floor(Math.random() * 150 + 250)} ${currentLang === 'am' ? 'ካሎሪ' : 'kcal'}
               </span>
               <span class="flex items-center gap-1.5 ml-auto">
                 <i class="fas fa-star text-amber-400"></i>
@@ -748,7 +677,7 @@
     function openAddModal() {
       editingId = null;
       document.getElementById('itemForm').reset();
-      document.getElementById('modalTitle').textContent = currentLang === 'ar' ? 'إضافة عنصر' : 'Add Item';
+      document.getElementById('modalTitle').textContent = currentLang === 'am' ? 'አዲስ ዕቃ አስገባ' : 'Add Item';
       openModal('itemModal');
     }
 
@@ -759,15 +688,15 @@
       editingId = id;
       document.getElementById('itemId').value = id;
       document.getElementById('itemNameEn').value = item.nameEn;
-      document.getElementById('itemNameAr').value = item.nameAr;
+      document.getElementById('itemNameAm').value = item.nameAm;
       document.getElementById('itemPrice').value = item.price;
       document.getElementById('itemCategory').value = item.category;
       document.getElementById('itemDescEn').value = item.descEn;
-      document.getElementById('itemDescAr').value = item.descAr;
+      document.getElementById('itemDescAm').value = item.descAm;
       document.getElementById('itemBadge').value = item.badge;
       document.getElementById('itemEmoji').value = item.emoji;
 
-      document.getElementById('modalTitle').textContent = currentLang === 'ar' ? 'تعديل عنصر' : 'Edit Item';
+      document.getElementById('modalTitle').textContent = currentLang === 'am' ? 'ዕቃውን አስተካክል' : 'Edit Item';
       openModal('itemModal');
     }
 
@@ -778,11 +707,11 @@
       const itemData = {
         id: editingId || Date.now().toString(),
         nameEn: document.getElementById('itemNameEn').value,
-        nameAr: document.getElementById('itemNameAr').value,
+        nameAm: document.getElementById('itemNameAm').value,
         price: parseFloat(document.getElementById('itemPrice').value),
         category: document.getElementById('itemCategory').value,
         descEn: document.getElementById('itemDescEn').value,
-        descAr: document.getElementById('itemDescAr').value,
+        descAm: document.getElementById('itemDescAm').value,
         badge: document.getElementById('itemBadge').value,
         emoji: document.getElementById('itemEmoji').value || '🍽️',
         favorite: editingId ? (menuItems.find(i => i.id === editingId)?.favorite || false) : false
@@ -801,7 +730,7 @@
     }
 
     function deleteItem(id) {
-      const confirmText = currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا العنصر؟' : 'Delete this item permanently?';
+      const confirmText = currentLang === 'am' ? 'ይህን ዕቃ ለመሰረዝ እርግጠኛ ነዎት?' : 'Delete this item permanently?';
       if (confirm(confirmText)) {
         menuItems = menuItems.filter(i => i.id !== id);
         saveData();
@@ -816,25 +745,20 @@
         closeModal('authModal');
         renderContent();
       } else {
-        alert(currentLang === 'ar' ? 'كلمة المرور خاطئة!' : 'Wrong password!');
+        alert(currentLang === 'am' ? 'የይለፍ ቃል ተሳስቷል!' : 'Wrong password!');
       }
     }
 
     // ==================== LANGUAGE ====================
     function toggleLanguage() {
-      currentLang = currentLang === 'en' ? 'ar' : 'en';
-      const toggle = document.getElementById('langToggle');
-      const knob = document.getElementById('langKnob');
+      currentLang = currentLang === 'en' ? 'am' : 'en';
+      const btn = document.getElementById('langBtn');
 
-      if (currentLang === 'ar') {
-        toggle.classList.replace('bg-cafe-200', 'bg-cafe-600');
-        knob.style.transform = 'translateX(24px)';
-        knob.textContent = 'AR';
+      if (currentLang === 'am') {
+        btn.textContent = 'AM';
         document.dir = 'rtl';
       } else {
-        toggle.classList.replace('bg-cafe-600', 'bg-cafe-200');
-        knob.style.transform = 'translateX(0)';
-        knob.textContent = 'EN';
+        btn.textContent = 'EN';
         document.dir = 'ltr';
       }
 
@@ -845,7 +769,7 @@
     }
 
     function updateLanguage() {
-      document.querySelectorAll('[data-en][data-ar]').forEach(el => {
+      document.querySelectorAll('[data-en][data-am]').forEach(el => {
         el.textContent = el.getAttribute(`data-${currentLang}`);
       });
     }
