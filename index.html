@@ -645,7 +645,9 @@
       currentLang = currentLang === 'en' ? 'am' : 'en';
       var btn = document.getElementById('langToggleBtn');
       btn.textContent = currentLang === 'am' ? 'AM' : 'EN';
-      document.dir = currentLang === 'am' ? 'rtl' : 'ltr';
+      // Amharic is LTR (left-to-right), same as English
+      // Only Arabic/Hebrew need RTL - keeping LTR for both EN and AM
+      document.dir = 'ltr';
       renderCategories();
       renderContent();
     }
