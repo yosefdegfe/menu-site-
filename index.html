@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Le Petit Cafe - Menu</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;600&family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script>
     tailwind.config = {
@@ -14,6 +14,7 @@
           fontFamily: {
             serif: ['Cormorant Garamond', 'serif'],
             sans: ['DM Sans', 'sans-serif'],
+            amharic: ['Noto Sans Ethiopic', 'DM Sans', 'sans-serif'],
           },
           colors: {
             cafe: {
@@ -33,6 +34,7 @@
   <style>
     body { font-family: 'DM Sans', sans-serif; background: #faf6f1; }
     .font-serif { font-family: 'Cormorant Garamond', serif; }
+    .font-amharic { font-family: 'Noto Sans Ethiopic', 'DM Sans', sans-serif; }
     .hide-scroll::-webkit-scrollbar { display: none; }
     .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     .card-hover { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -46,7 +48,11 @@
     .modal-sheet { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
     .modal-overlay.hidden .modal-sheet { transform: translateY(100%); }
     .modal-overlay:not(.hidden) .modal-sheet { transform: translateY(0); }
+    * { direction: ltr !important; unicode-bidi: normal !important; }
+    .img-upload-preview { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; border: 2px dashed #e8c9a8; }
+    .img-fallback { background: linear-gradient(135deg, #f5e6d3 0%, #e8c9a8 100%); }
   </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body class="antialiased text-espresso">
@@ -168,7 +174,7 @@
   <!-- Item Modal -->
   <div id="itemModal" class="modal-overlay fixed inset-0 z-[200] hidden">
     <div class="absolute inset-0 bg-espresso/60 backdrop-blur-sm" id="itemBackdrop"></div>
-    <div class="modal-sheet absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-cream rounded-t-3xl shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="modal-sheet absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-cream rounded-t-3xl shadow-2xl max-h-[92vh] overflow-hidden flex flex-col">
       <div class="p-6 overflow-y-auto">
         <div class="w-12 h-1 bg-cafe-200 rounded-full mx-auto mb-6"></div>
         <div class="flex items-center justify-between mb-6">
@@ -179,6 +185,29 @@
         </div>
         <form id="itemForm">
           <input type="hidden" id="itemId">
+
+          <!-- Image Upload -->
+          <div class="mb-4">
+            <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase">Item Image</label>
+            <div class="relative">
+              <input type="file" id="itemImageInput" accept="image/*" class="hidden">
+              <div id="imagePreviewContainer" class="w-full h-36 rounded-2xl bg-gradient-to-br from-cafe-100 to-cafe-50 border-2 border-dashed border-cafe-200 flex flex-col items-center justify-center cursor-pointer overflow-hidden" onclick="document.getElementById('itemImageInput').click()">
+                <img id="imagePreview" class="hidden w-full h-full object-cover">
+                <div id="imagePlaceholder" class="flex flex-col items-center gap-2">
+                  <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
+                    <i class="fas fa-camera text-cafe-400 text-lg"></i>
+                  </div>
+                  <span class="text-xs text-cafe-400 font-medium">Tap to add photo</span>
+                </div>
+                <button type="button" id="removeImageBtn" class="hidden absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md">
+                  <i class="fas fa-times text-xs"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-[10px] text-cafe-400 mt-1.5">Or paste an image URL:</p>
+            <input type="text" id="itemImageUrl" placeholder="https://example.com/photo.jpg" class="w-full h-10 px-4 rounded-xl bg-white border border-cafe-100 text-xs mt-1">
+          </div>
+
           <div class="grid grid-cols-2 gap-3 mb-4">
             <div>
               <label class="block text-xs font-semibold text-cafe-600 mb-1.5 uppercase">Name (EN)</label>
@@ -235,6 +264,17 @@
     </div>
   </div>
 
+  <!-- Image Viewer Modal -->
+  <div id="imageViewerModal" class="modal-overlay fixed inset-0 z-[300] hidden">
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" id="imageViewerBackdrop"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <button id="closeImageViewer" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center">
+        <i class="fas fa-times"></i>
+      </button>
+      <img id="viewerImage" class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain">
+    </div>
+  </div>
+
   <script>
     // ========== STATE ==========
     var currentLang = 'en';
@@ -242,28 +282,41 @@
     var currentCategory = 'all';
     var isOwner = false;
     var editingId = null;
+    var currentImageBase64 = null;
 
     var categories = [
-      { id: 'all', en: 'All', am: 'All', icon: 'fa-th-large' },
-      { id: 'starters', en: 'Starters', am: 'Starters', icon: 'fa-leaf' },
-      { id: 'mains', en: 'Mains', am: 'Mains', icon: 'fa-drumstick-bite' },
-      { id: 'desserts', en: 'Desserts', am: 'Desserts', icon: 'fa-ice-cream' },
-      { id: 'drinks', en: 'Drinks', am: 'Drinks', icon: 'fa-mug-hot' }
+      { id: 'all', en: 'All', am: 'ሁሉም', icon: 'fa-th-large' },
+      { id: 'starters', en: 'Starters', am: 'መነሻዎች', icon: 'fa-leaf' },
+      { id: 'mains', en: 'Mains', am: 'ዋና ዋና', icon: 'fa-drumstick-bite' },
+      { id: 'desserts', en: 'Desserts', am: 'ጣፋጮች', icon: 'fa-ice-cream' },
+      { id: 'drinks', en: 'Drinks', am: 'መጠጦች', icon: 'fa-mug-hot' }
     ];
+
+    // Demo images from Unsplash (free stock photos)
+    var demoImages = {
+      '1': 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&h=400&fit=crop',
+      '2': 'https://images.unsplash.com/photo-1529312266912-b33cf6227e24?w=600&h=400&fit=crop',
+      '3': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop',
+      '4': 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&h=400&fit=crop',
+      '5': 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&h=400&fit=crop',
+      '6': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&h=400&fit=crop',
+      '7': 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&h=400&fit=crop',
+      '8': 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&h=400&fit=crop',
+      '9': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&h=400&fit=crop'
+    };
 
     var menuItems = [
-      { id: '1', nameEn: 'Truffle Mushroom Soup', nameAm: 'Truffle Mushroom Soup', price: 14, category: 'starters', descEn: 'Creamy wild mushroom soup with black truffle oil and toasted sourdough.', descAm: 'Creamy wild mushroom soup with black truffle oil and toasted sourdough.', badge: 'hot', emoji: '🍄', favorite: false },
-      { id: '2', nameEn: 'Burrata & Tomato', nameAm: 'Burrata & Tomato', price: 18, category: 'starters', descEn: 'Creamy burrata, vine-ripened tomatoes, aged balsamic, and fresh basil.', descAm: 'Creamy burrata, vine-ripened tomatoes, aged balsamic, and fresh basil.', badge: 'veg', emoji: '🍅', favorite: false },
-      { id: '3', nameEn: 'Wagyu Beef Burger', nameAm: 'Wagyu Beef Burger', price: 32, category: 'mains', descEn: 'A5 Wagyu patty, brioche bun, aged cheddar, caramelized onions, truffle mayo.', descAm: 'A5 Wagyu patty, brioche bun, aged cheddar, caramelized onions, truffle mayo.', badge: 'hot', emoji: '🍔', favorite: false },
-      { id: '4', nameEn: 'Pan-Seared Salmon', nameAm: 'Pan-Seared Salmon', price: 36, category: 'mains', descEn: 'Atlantic salmon, lemon butter, roasted asparagus, saffron risotto.', descAm: 'Atlantic salmon, lemon butter, roasted asparagus, saffron risotto.', badge: 'new', emoji: '🐟', favorite: false },
-      { id: '5', nameEn: 'Mushroom Risotto', nameAm: 'Mushroom Risotto', price: 28, category: 'mains', descEn: 'Arborio rice, porcini mushrooms, parmesan, white wine, and truffle oil.', descAm: 'Arborio rice, porcini mushrooms, parmesan, white wine, and truffle oil.', badge: 'veg', emoji: '🍚', favorite: false },
-      { id: '6', nameEn: 'Tiramisu', nameAm: 'Tiramisu', price: 16, category: 'desserts', descEn: 'Traditional Italian layers of espresso-soaked ladyfingers and mascarpone cream.', descAm: 'Traditional Italian layers of espresso-soaked ladyfingers and mascarpone cream.', badge: '', emoji: '🍰', favorite: false },
-      { id: '7', nameEn: 'Lava Cake', nameAm: 'Lava Cake', price: 18, category: 'desserts', descEn: 'Warm chocolate cake with molten center, salted caramel, and vanilla ice cream.', descAm: 'Warm chocolate cake with molten center, salted caramel, and vanilla ice cream.', badge: 'hot', emoji: '🍫', favorite: false },
-      { id: '8', nameEn: 'Spanish Latte', nameAm: 'Spanish Latte', price: 9, category: 'drinks', descEn: 'Double espresso, sweetened condensed milk, over ice with cinnamon dust.', descAm: 'Double espresso, sweetened condensed milk, over ice with cinnamon dust.', badge: 'new', emoji: '☕', favorite: false },
-      { id: '9', nameEn: 'Passion Mojito', nameAm: 'Passion Mojito', price: 13, category: 'drinks', descEn: 'Fresh mint, lime, passion fruit, soda water. Non-alcoholic and refreshing.', descAm: 'Fresh mint, lime, passion fruit, soda water. Non-alcoholic and refreshing.', badge: 'veg', emoji: '🍹', favorite: false }
+      { id: '1', nameEn: 'Truffle Mushroom Soup', nameAm: 'ትሩፍል እንጉዳይ ሾርባ', price: 14, category: 'starters', descEn: 'Creamy wild mushroom soup with black truffle oil and toasted sourdough.', descAm: 'በጥቁር ትሩፍል ዘይትና በተጠበሰ ሳውርዶ ዳቦ የተዘጋጀ የዱር እንጉዳይ ሾርባ።', badge: 'hot', emoji: '🍄', favorite: false, image: demoImages['1'] },
+      { id: '2', nameEn: 'Burrata & Tomato', nameAm: 'ቡራታ እና ቲማቲም', price: 18, category: 'starters', descEn: 'Creamy burrata, vine-ripened tomatoes, aged balsamic, and fresh basil.', descAm: 'ክሬሚ ቡራታ፣ በወይን የተበላሸ ቲማቲም፣ የዕድሜ የገፋ ባልሳሚክ፣ እና ትሩፍ ባዚል።', badge: 'veg', emoji: '🍅', favorite: false, image: demoImages['2'] },
+      { id: '3', nameEn: 'Wagyu Beef Burger', nameAm: 'ዋጉ ዶሮስ በርገር', price: 32, category: 'mains', descEn: 'A5 Wagyu patty, brioche bun, aged cheddar, caramelized onions, truffle mayo.', descAm: 'A5 ዋጉ የብሬይንስ ዳቦ፣ የዕድሜ የገፋ ቼዳር፣ የቀረፀ ሽንኩርት፣ ትሩፍል ማዮ።', badge: 'hot', emoji: '🍔', favorite: false, image: demoImages['3'] },
+      { id: '4', nameEn: 'Pan-Seared Salmon', nameAm: 'የተጠበሰ ሳልሞን', price: 36, category: 'mains', descEn: 'Atlantic salmon, lemon butter, roasted asparagus, saffron risotto.', descAm: 'የአትላንቲክ ሳልሞን፣ የሎሚ ቅቤ፣ የተጠበሰ አስፓራጋስ፣ ሳፍሮን ሪዞቶ።', badge: 'new', emoji: '🐟', favorite: false, image: demoImages['4'] },
+      { id: '5', nameEn: 'Mushroom Risotto', nameAm: 'እንጉዳይ ሪዞቶ', price: 28, category: 'mains', descEn: 'Arborio rice, porcini mushrooms, parmesan, white wine, and truffle oil.', descAm: 'አርቦሪዮ ሩዝ፣ ፖርቺኒ እንጉዳይ፣ ፓርሜዛን፣ ነጭ ወይን፣ እና ትሩፍል ዘይት።', badge: 'veg', emoji: '🍚', favorite: false, image: demoImages['5'] },
+      { id: '6', nameEn: 'Tiramisu', nameAm: 'ቲራሚሱ', price: 16, category: 'desserts', descEn: 'Traditional Italian layers of espresso-soaked ladyfingers and mascarpone cream.', descAm: 'በኢስፕሬሶ የተረጨ የባህላዊ ኢጣሊያን ሴሰሚና እና ማስካርፖኔ ክሬም።', badge: '', emoji: '🍰', favorite: false, image: demoImages['6'] },
+      { id: '7', nameEn: 'Lava Cake', nameAm: 'ላቫ ኬክ', price: 18, category: 'desserts', descEn: 'Warm chocolate cake with molten center, salted caramel, and vanilla ice cream.', descAm: 'ሞልተን ማዕከል ያለው ትኩስ ቸኮሌት ኬክ፣ የጨመቀ ካራሜል፣ እና ቫኒላ አይስ ክሬም።', badge: 'hot', emoji: '🍫', favorite: false, image: demoImages['7'] },
+      { id: '8', nameEn: 'Spanish Latte', nameAm: 'ስፓኒሽ ላቴ', price: 9, category: 'drinks', descEn: 'Double espresso, sweetened condensed milk, over ice with cinnamon dust.', descAm: 'ድርብ ኢስፕሬሶ፣ የተጣፈጠ ኮንደንስድ ወተት፣ በበረዶ ላይ ከቀረፈ ዘይት ጋር።', badge: 'new', emoji: '☕', favorite: false, image: demoImages['8'] },
+      { id: '9', nameEn: 'Passion Mojito', nameAm: 'ፓሽን ሞሂቶ', price: 13, category: 'drinks', descEn: 'Fresh mint, lime, passion fruit, soda water. Non-alcoholic and refreshing.', descAm: 'ትሩፍ ነነድ፣ ሎሚ፣ ፓሽን ፍሩት፣ ሶዳ ውሃ። ያለ አልኮል እና አዲስ አዲስ።', badge: 'veg', emoji: '🍹', favorite: false, image: demoImages['9'] }
     ];
 
-    // SVG pattern for card backgrounds
     var svgPattern = "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a66d3a' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E";
 
     // ========== INIT ==========
@@ -294,6 +347,69 @@
       document.getElementById('itemBackdrop').addEventListener('click', function() { closeModal('itemModal'); });
       document.getElementById('closeItemModal').addEventListener('click', function() { closeModal('itemModal'); });
       document.getElementById('itemForm').addEventListener('submit', saveItem);
+
+      // Image upload handlers
+      document.getElementById('itemImageInput').addEventListener('change', handleImageUpload);
+      document.getElementById('removeImageBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        removeImage();
+      });
+      document.getElementById('itemImageUrl').addEventListener('input', handleImageUrl);
+
+      // Image viewer
+      document.getElementById('imageViewerBackdrop').addEventListener('click', function() { closeModal('imageViewerModal'); });
+      document.getElementById('closeImageViewer').addEventListener('click', function() { closeModal('imageViewerModal'); });
+    }
+
+    // ========== IMAGE HANDLING ==========
+    function handleImageUpload(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(event) {
+        currentImageBase64 = event.target.result;
+        showImagePreview(currentImageBase64);
+        document.getElementById('itemImageUrl').value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleImageUrl(e) {
+      var url = e.target.value.trim();
+      if (url) {
+        currentImageBase64 = url;
+        showImagePreview(url);
+      } else {
+        removeImage();
+      }
+    }
+
+    function showImagePreview(src) {
+      var preview = document.getElementById('imagePreview');
+      var placeholder = document.getElementById('imagePlaceholder');
+      var removeBtn = document.getElementById('removeImageBtn');
+      preview.src = src;
+      preview.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+      removeBtn.classList.remove('hidden');
+    }
+
+    function removeImage() {
+      currentImageBase64 = null;
+      document.getElementById('itemImageInput').value = '';
+      document.getElementById('itemImageUrl').value = '';
+      var preview = document.getElementById('imagePreview');
+      var placeholder = document.getElementById('imagePlaceholder');
+      var removeBtn = document.getElementById('removeImageBtn');
+      preview.src = '';
+      preview.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+      removeBtn.classList.add('hidden');
+    }
+
+    function openImageViewer(src) {
+      document.getElementById('viewerImage').src = src;
+      openModal('imageViewerModal');
     }
 
     // ========== RENDER ==========
@@ -337,7 +453,7 @@
       }
 
       if (filtered.length === 0) {
-        container.innerHTML = emptyState('fa-utensils', 'No items yet', 'Add items from owner panel');
+        container.innerHTML = emptyState('fa-utensils', currentLang === 'am' ? 'እስካሁን ምንም ዕቃዎች የሉም' : 'No items yet', currentLang === 'am' ? 'እባክዎ ከባለቤት ፓነል ዕቃዎችን ያክሉ' : 'Add items from owner panel');
         return;
       }
 
@@ -350,7 +466,7 @@
       html += '<h2 class="font-serif text-2xl font-bold flex items-center gap-2">';
       html += '<i class="fas ' + (catInfo ? catInfo.icon : 'fa-utensils') + ' text-cafe-500 text-lg"></i> ';
       html += (currentLang === 'am' ? catInfo.am : catInfo.en) + '</h2>';
-      html += '<p class="text-sm text-cafe-400 mt-1">' + filtered.length + ' items</p></div>';
+      html += '<p class="text-sm text-cafe-400 mt-1">' + filtered.length + ' ' + (currentLang === 'am' ? 'ዕቃዎች' : 'items') + '</p></div>';
       html += '<div class="space-y-5">';
       for (var idx = 0; idx < filtered.length; idx++) {
         html += menuCard(filtered[idx], idx);
@@ -358,6 +474,7 @@
       html += '</div>';
       container.innerHTML = html;
       addFavoriteHandlers();
+      addImageClickHandlers();
     }
 
     function renderFavorites(container) {
@@ -367,14 +484,14 @@
       }
 
       if (favorites.length === 0) {
-        container.innerHTML = emptyState('fa-heart', 'No favorites', 'Tap heart to save items');
+        container.innerHTML = emptyState('fa-heart', currentLang === 'am' ? 'ምንም ተወዳጆች የሉም' : 'No favorites', currentLang === 'am' ? 'ዕቃዎችን ለማስቀመጥ ልብ ይንኩ' : 'Tap heart to save items');
         return;
       }
 
       var html = '<div class="mb-5">';
       html += '<h2 class="font-serif text-2xl font-bold flex items-center gap-2">';
-      html += '<i class="fas fa-heart text-red-400 text-lg"></i> Your Favorites</h2>';
-      html += '<p class="text-sm text-cafe-400 mt-1">' + favorites.length + ' saved</p></div>';
+      html += '<i class="fas fa-heart text-red-400 text-lg"></i> ' + (currentLang === 'am' ? 'የእርስዎ ተወዳጆች' : 'Your Favorites') + '</h2>';
+      html += '<p class="text-sm text-cafe-400 mt-1">' + favorites.length + ' ' + (currentLang === 'am' ? 'የተቀመጡ' : 'saved') + '</p></div>';
       html += '<div class="space-y-5">';
       for (var idx = 0; idx < favorites.length; idx++) {
         html += menuCard(favorites[idx], idx);
@@ -382,22 +499,23 @@
       html += '</div>';
       container.innerHTML = html;
       addFavoriteHandlers();
+      addImageClickHandlers();
     }
 
     function renderOwner(container) {
       if (!isOwner) {
         container.innerHTML = '<div class="flex flex-col items-center justify-center py-16 text-center">' +
           '<div class="w-20 h-20 rounded-3xl bg-cafe-100 flex items-center justify-center mb-5"><i class="fas fa-lock text-3xl text-cafe-400"></i></div>' +
-          '<h2 class="font-serif text-2xl font-bold mb-2">Owner Panel</h2>' +
-          '<p class="text-sm text-cafe-400 mb-6">Enter password to manage menu</p>' +
+          '<h2 class="font-serif text-2xl font-bold mb-2">' + (currentLang === 'am' ? 'የባለቤት ፓነል' : 'Owner Panel') + '</h2>' +
+          '<p class="text-sm text-cafe-400 mb-6">' + (currentLang === 'am' ? 'ምናሌን ለማስተዳደር የይለፍ ቃል ያስገቡ' : 'Enter password to manage menu') + '</p>' +
           '<button id="unlockBtn" class="h-12 px-8 rounded-2xl bg-gradient-to-r from-cafe-600 to-cafe-700 text-cream font-semibold shadow-lg">' +
-          '<i class="fas fa-unlock mr-2"></i> Unlock</button></div>';
+          '<i class="fas fa-unlock mr-2"></i> ' + (currentLang === 'am' ? 'ክፈት' : 'Unlock') + '</button></div>';
         document.getElementById('unlockBtn').addEventListener('click', function() { openModal('authModal'); });
         return;
       }
 
       var html = '<div class="flex items-center justify-between mb-6">';
-      html += '<h2 class="font-serif text-2xl font-bold"><i class="fas fa-shield-alt text-cafe-500 mr-2"></i> Owner Panel</h2>';
+      html += '<h2 class="font-serif text-2xl font-bold"><i class="fas fa-shield-alt text-cafe-500 mr-2"></i> ' + (currentLang === 'am' ? 'የባለቤት ፓነል' : 'Owner Panel') + '</h2>';
       html += '<button id="addItemBtn" class="w-11 h-11 rounded-xl bg-gradient-to-br from-cafe-600 to-cafe-700 text-cream flex items-center justify-center shadow-lg">';
       html += '<i class="fas fa-plus"></i></button></div>';
 
@@ -410,18 +528,22 @@
 
         html += '<div class="mb-6">';
         html += '<h3 class="text-xs font-bold text-cafe-500 uppercase tracking-widest mb-3 flex items-center gap-2">';
-        html += '<i class="fas ' + cat.icon + '"></i> ' + cat.en + ' (' + items.length + ')</h3>';
+        html += '<i class="fas ' + cat.icon + '"></i> ' + (currentLang === 'am' ? cat.am : cat.en) + ' (' + items.length + ')</h3>';
 
-        if (items.length === 0) html += '<p class="text-sm text-cafe-300 py-2">No items</p>';
+        if (items.length === 0) html += '<p class="text-sm text-cafe-300 py-2">' + (currentLang === 'am' ? 'ምንም ዕቃዎች የሉም' : 'No items') + '</p>';
 
         html += '<div class="space-y-3">';
         for (var it = 0; it < items.length; it++) {
           var item = items[it];
           html += '<div class="bg-white rounded-2xl p-3 border border-cafe-100 shadow-sm flex items-center gap-3">';
-          html += '<div class="w-14 h-14 rounded-xl bg-cafe-50 flex items-center justify-center text-2xl flex-shrink-0">' + item.emoji + '</div>';
+          if (item.image) {
+            html += '<div class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-cafe-50"><img src="' + item.image + '" class="w-full h-full object-cover" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span class=text-2xl>\' + item.emoji + \'</span>\'"></div>';
+          } else {
+            html += '<div class="w-14 h-14 rounded-xl bg-cafe-50 flex items-center justify-center text-2xl flex-shrink-0">' + item.emoji + '</div>';
+          }
           html += '<div class="flex-1 min-w-0">';
-          html += '<h4 class="font-semibold text-sm truncate">' + item.nameEn + '</h4>';
-          html += '<p class="text-xs text-cafe-400 mt-0.5">$' + item.price.toFixed(2) + ' - ' + (item.badge || 'Standard') + '</p></div>';
+          html += '<h4 class="font-semibold text-sm truncate">' + (currentLang === 'am' ? item.nameAm : item.nameEn) + '</h4>';
+          html += '<p class="text-xs text-cafe-400 mt-0.5">$' + item.price.toFixed(2) + ' - ' + (item.badge || (currentLang === 'am' ? 'መደበኛ' : 'Standard')) + '</p></div>';
           html += '<div class="flex gap-1.5">';
           html += '<button class="edit-btn w-9 h-9 rounded-lg bg-cafe-50 text-cafe-600 flex items-center justify-center" data-id="' + item.id + '">';
           html += '<i class="fas fa-pen text-xs"></i></button>';
@@ -432,7 +554,7 @@
       }
 
       html += '<button id="lockPanelBtn" class="w-full h-12 rounded-2xl bg-cafe-100 text-cafe-700 font-semibold mt-4">';
-      html += '<i class="fas fa-lock mr-2"></i> Lock Panel</button>';
+      html += '<i class="fas fa-lock mr-2"></i> ' + (currentLang === 'am' ? 'ፓነል ዝጋ' : 'Lock Panel') + '</button>';
       container.innerHTML = html;
 
       document.getElementById('addItemBtn').addEventListener('click', openAddModal);
@@ -465,15 +587,28 @@
 
       var catName = '';
       for (var c = 0; c < categories.length; c++) {
-        if (categories[c].id === item.category) { catName = categories[c].en; break; }
+        if (categories[c].id === item.category) { catName = currentLang === 'am' ? categories[c].am : categories[c].en; break; }
       }
 
+      var hasImage = item.image && item.image.length > 0;
+
       var html = '<div class="card-hover bg-white rounded-3xl overflow-hidden border border-cafe-100 shadow-sm" style="animation: slideUp 0.5s ' + (index * 0.08) + 's both;">';
-      html += '<div class="relative h-52 bg-gradient-to-br from-cafe-100 via-cafe-50 to-cream overflow-hidden img-overlay">';
-      html += '<div class="absolute inset-0 opacity-30" style="background-image: url(' + svgPattern + ');"></div>';
-      html += '<div class="absolute inset-0 flex items-center justify-center">';
-      html += '<div class="w-24 h-24 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-lg">';
-      html += '<span class="text-5xl">' + item.emoji + '</span></div></div>';
+
+      // Image or gradient header
+      if (hasImage) {
+        html += '<div class="relative h-52 overflow-hidden img-overlay cursor-pointer" onclick="openImageViewer(\'' + item.image + '\')">';
+        html += '<img src="' + item.image + '" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display=\'none\';this.parentElement.querySelector(\'.img-fallback\').style.display=\'flex\'">';
+        html += '<div class="img-fallback hidden absolute inset-0 flex items-center justify-center bg-gradient-to-br from-cafe-100 via-cafe-50 to-cream">';
+        html += '<div class="absolute inset-0 opacity-30" style="background-image: url(' + svgPattern + ');"></div>';
+        html += '<div class="w-24 h-24 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-lg"><span class="text-5xl">' + item.emoji + '</span></div></div>';
+      } else {
+        html += '<div class="relative h-52 bg-gradient-to-br from-cafe-100 via-cafe-50 to-cream overflow-hidden img-overlay">';
+        html += '<div class="absolute inset-0 opacity-30" style="background-image: url(' + svgPattern + ');"></div>';
+        html += '<div class="absolute inset-0 flex items-center justify-center">';
+        html += '<div class="w-24 h-24 rounded-full bg-white/60 backdrop-blur-sm flex items-center justify-center shadow-lg">';
+        html += '<span class="text-5xl">' + item.emoji + '</span></div></div>';
+      }
+
       html += badgeHtml;
       html += '<button class="fav-btn absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md" data-id="' + item.id + '">';
       html += '<i class="fas fa-heart ' + (item.favorite ? 'text-red-400' : 'text-cafe-200') + ' text-lg"></i></button>';
@@ -483,10 +618,11 @@
       html += '<h3 class="font-serif text-xl font-bold leading-tight">' + name + '</h3></div>';
       html += '<div class="text-right"><span class="font-serif text-2xl font-bold">$' + Math.floor(item.price) + '</span>';
       html += '<span class="text-sm opacity-80">.' + ((item.price % 1).toFixed(2).slice(2) || '00') + '</span></div></div></div></div>';
+
       html += '<div class="p-5"><p class="text-sm text-cafe-500 leading-relaxed mb-4">' + desc + '</p>';
       html += '<div class="flex items-center gap-4 text-xs text-cafe-400">';
-      html += '<span class="flex items-center gap-1.5"><i class="fas fa-clock text-cafe-300"></i> ' + time1 + '-' + time2 + ' min</span>';
-      html += '<span class="flex items-center gap-1.5"><i class="fas fa-fire text-cafe-300"></i> ' + kcal + ' kcal</span>';
+      html += '<span class="flex items-center gap-1.5"><i class="fas fa-clock text-cafe-300"></i> ' + time1 + '-' + time2 + ' ' + (currentLang === 'am' ? 'ደቂቃ' : 'min') + '</span>';
+      html += '<span class="flex items-center gap-1.5"><i class="fas fa-fire text-cafe-300"></i> ' + kcal + ' ' + (currentLang === 'am' ? 'ካሎሪ' : 'kcal') + '</span>';
       html += '<span class="flex items-center gap-1.5 ml-auto"><i class="fas fa-star text-amber-400"></i> ' + rating + '</span></div></div></div>';
       return html;
     }
@@ -497,6 +633,15 @@
         btns[i].addEventListener('click', function(e) {
           e.stopPropagation();
           toggleFavorite(this.getAttribute('data-id'));
+        });
+      }
+    }
+
+    function addImageClickHandlers() {
+      var imgs = document.querySelectorAll('.menu-item-img');
+      for (var i = 0; i < imgs.length; i++) {
+        imgs[i].addEventListener('click', function() {
+          openImageViewer(this.getAttribute('data-src'));
         });
       }
     }
@@ -558,13 +703,15 @@
       if (id === 'itemModal') {
         editingId = null;
         document.getElementById('itemForm').reset();
+        removeImage();
       }
     }
 
     function openAddModal() {
       editingId = null;
       document.getElementById('itemForm').reset();
-      document.getElementById('modalTitle').textContent = currentLang === 'am' ? 'Add Item' : 'Add Item';
+      removeImage();
+      document.getElementById('modalTitle').textContent = currentLang === 'am' ? 'ዕቃ ጨምር' : 'Add Item';
       openModal('itemModal');
     }
 
@@ -584,7 +731,17 @@
       document.getElementById('itemDescAm').value = item.descAm;
       document.getElementById('itemBadge').value = item.badge;
       document.getElementById('itemEmoji').value = item.emoji;
-      document.getElementById('modalTitle').textContent = currentLang === 'am' ? 'Edit Item' : 'Edit Item';
+
+      // Load image if exists
+      if (item.image) {
+        currentImageBase64 = item.image;
+        showImagePreview(item.image);
+        document.getElementById('itemImageUrl').value = item.image.startsWith('http') ? item.image : '';
+      } else {
+        removeImage();
+      }
+
+      document.getElementById('modalTitle').textContent = currentLang === 'am' ? 'ዕቃ አስተካክል' : 'Edit Item';
       openModal('itemModal');
     }
 
@@ -601,6 +758,7 @@
         descAm: document.getElementById('itemDescAm').value,
         badge: document.getElementById('itemBadge').value,
         emoji: document.getElementById('itemEmoji').value || '🍽️',
+        image: currentImageBase64,
         favorite: false
       };
       if (editingId) {
@@ -619,7 +777,7 @@
     }
 
     function deleteItem(id) {
-      if (confirm('Delete this item?')) {
+      if (confirm(currentLang === 'am' ? 'ይህን ዕቃ መሰረዝ ይፈልጋሉ?' : 'Delete this item?')) {
         var newItems = [];
         for (var i = 0; i < menuItems.length; i++) {
           if (menuItems[i].id !== id) newItems.push(menuItems[i]);
@@ -636,7 +794,7 @@
         closeModal('authModal');
         renderContent();
       } else {
-        alert('Wrong password!');
+        alert(currentLang === 'am' ? 'የተሳሳተ የይለፍ ቃል!' : 'Wrong password!');
       }
     }
 
@@ -645,9 +803,20 @@
       currentLang = currentLang === 'en' ? 'am' : 'en';
       var btn = document.getElementById('langToggleBtn');
       btn.textContent = currentLang === 'am' ? 'AM' : 'EN';
-      // Amharic is LTR (left-to-right), same as English
-      // Only Arabic/Hebrew need RTL - keeping LTR for both EN and AM
-      document.dir = 'ltr';
+
+      var translatableElements = document.querySelectorAll('[data-en][data-am]');
+      for (var i = 0; i < translatableElements.length; i++) {
+        var el = translatableElements[i];
+        var newText = currentLang === 'am' ? el.getAttribute('data-am') : el.getAttribute('data-en');
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = newText;
+        } else {
+          el.textContent = newText;
+        }
+      }
+
+      document.documentElement.lang = currentLang === 'am' ? 'am' : 'en';
+
       renderCategories();
       renderContent();
     }
